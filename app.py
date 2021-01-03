@@ -1,10 +1,10 @@
-# [START catalog-reader-app]
+# [START order-persistor-app]
 from flask import Flask
 import pymysql
 
-app = Flask('catalog-reader')
+app = Flask('order-persistor')
 
-@app.route('/')
+@app.route('/', methods = ['PUT'])
 def hello():
     connection = pymysql.connect(host='127.0.0.1',
                              user='root',
@@ -29,8 +29,8 @@ def hello():
     requestBody = requestBody[:-1]
     requestBody += ']}'
 
-    return requestBody
+    return '{"status": "success"}'
 
 if __name__ == '__main__':
   app.run(host = '0.0.0.0', port = 80)
-# [END catalog-reader-app]
+# [END order-persistor-app]
