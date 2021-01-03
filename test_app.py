@@ -1,25 +1,22 @@
-# Copyright 2018 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     https://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 import unittest
 from app import hello
 
 class TestHelloApp(unittest.TestCase):
 
+#  @classmethod
+#  def setUpClass(cls):
+#      mysql_my_proc = factories.mysql_proc(port=3306)
+#      mysql_my = factories.mysql('mysql_my_proc')
+
+#      cls.mysql = MYSQLD_FACTORY()
+#      cls.db_conn = create_engine(cls.mysql.url()).connect()
+
+#  def setUp(self):
+#      self.mysql.start()
+#      self.db_conn.execute("""CREATE TABLE `foo` (blah)""")
+
   def test_hello(self):
-    self.assertEqual(hello(), "ase cloud assignment mock service 2\n")
+    self.assertEqual(hello(), '{"items": [{"itemName":"ToothBrush","itemPrice":145.5},{"itemName":"soap","itemPrice":45.5},{"itemName":"Men Wallet","itemPrice":3345.5}]}')
 
 if __name__ == '__main__':
   unittest.main()
-

@@ -1,27 +1,36 @@
-# Copyright 2018 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     https://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-# [START hello-app]
+# [START catalog-reader-app]
 from flask import Flask
-app = Flask('hello-cloudbuild')
+import pymysql
+
+app = Flask('catalog-reader')
 
 @app.route('/')
 def hello():
-  return "ase cloud assignment mock service 2\n"
+    connection = pymysql.connect(host='127.0.0.1',
+                             user='root',
+                             password='root',
+                             db='ase_assignment')
+
+    requestBody='{"items": ['
+
+    try:
+        with connection.cursor() as cursor:
+            # Read from database
+            sqlQuery = "SELECT item_name, price FROM Catalog"
+            cursor.execute(sqlQuery)
+            result = cursor.fetchall()
+
+            for row in result:
+                 print(row)
+                 requestBody += '{"itemName":"'+row[0]+'","itemPrice":'+ str(row[1]) +'},'
+    finally:
+        connection.close()
+
+    requestBody = requestBody[:-1]
+    requestBody += ']}'
+
+    return requestBody
 
 if __name__ == '__main__':
   app.run(host = '0.0.0.0', port = 80)
-# [END hello-app]
-
-
+# [END catalog-reader-app]

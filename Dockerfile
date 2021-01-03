@@ -15,6 +15,15 @@
 # [START dockerfile]
 FROM python:3.7-slim
 RUN pip install flask
+RUN pip install pymysql
+
+RUN apt-get update
+RUN apt-get install -y iputils-ping
+RUN apt-get install -y procps
+RUN apt-get install -y telnet
+RUN apt-get install -y curl
+RUN apt-get install -y vim
+
 WORKDIR /app
 COPY app.py /app/app.py
 ENTRYPOINT ["python"]

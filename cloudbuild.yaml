@@ -14,13 +14,11 @@
 
 # [START cloudbuild]
 steps:
-# This step runs the unit tests on the app
+        # This step runs the unit tests on the app
 - name: 'python:3.7-slim'
   id: Test
   entrypoint: /bin/sh
-  args:
-  - -c
-  - 'pip install flask && python test_app.py -v'
+  args: [ '-c', 'apt-get update && apt-get install -y mariadb-server && mkdir -p /run/mysqld && chown mysql:mysql -R /run/mysqld && service mysql start && mysql < data_for_test_db.sql && pip install flask && pip install pymysql && python test_app.py -v']
 
 # This step builds the container image.
 - name: 'gcr.io/cloud-builders/docker'
@@ -28,7 +26,7 @@ steps:
   args:
   - 'build'
   - '-t'
-  - 'gcr.io/$PROJECT_ID/order-persistor:$SHORT_SHA'
+  - 'gcr.io/$PROJECT_ID/catalog-reader:$SHORT_SHA'
   - '.'
 
 # This step pushes the image to Container Registry
@@ -38,19 +36,19 @@ steps:
   id: Push
   args:
   - 'push'
-  - 'gcr.io/$PROJECT_ID/order-persistor:$SHORT_SHA'
+  - 'gcr.io/$PROJECT_ID/catalog-reader:$SHORT_SHA'
 # [END cloudbuild]
 
 # [START cloudbuild-trigger-cd]
-# This step clones the order-persistor-env repository
+# This step clones the catalog-reader-env repository
 - name: 'gcr.io/cloud-builders/gcloud'
   id: Clone env repository
   entrypoint: /bin/sh
   args:
   - '-c'
   - |
-    gcloud source repos clone order-persistor-env && \
-    cd order-persistor-env && \
+    gcloud source repos clone catalog-reader-env && \
+    cd catalog-reader-env && \
     git checkout candidate && \
     git config user.email $(gcloud auth list --filter=status:ACTIVE --format='value(account)')
 
@@ -62,7 +60,7 @@ steps:
   - '-c'
   - |
      sed "s/GOOGLE_CLOUD_PROJECT/${PROJECT_ID}/g" kubernetes.yaml.tpl | \
-     sed "s/COMMIT_SHA/${SHORT_SHA}/g" > order-persistor-env/kubernetes.yaml
+     sed "s/COMMIT_SHA/${SHORT_SHA}/g" > catalog-reader-env/kubernetes.yaml
 
 # This step pushes the manifest back to hello-cloudbuild-env
 - name: 'gcr.io/cloud-builders/gcloud'
@@ -72,10 +70,10 @@ steps:
   - '-c'
   - |
     set -x && \
-    cd order-persistor-env && \
+    cd catalog-reader-env && \
     git add kubernetes.yaml && \
-    git commit -m "Deploying image gcr.io/${PROJECT_ID}/order-persistor:${SHORT_SHA}
-    Built from commit ${COMMIT_SHA} of repository order-persistor-app
+    git commit -m "Deploying image gcr.io/${PROJECT_ID}/catalog-reader:${SHORT_SHA}
+    Built from commit ${COMMIT_SHA} of repository catalog-reader-app
     Author: $(git log --format='%an <%ae>' -n 1 HEAD)" && \
     git push origin candidate
 
