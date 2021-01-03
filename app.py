@@ -11,23 +11,14 @@ def hello():
                              password='root',
                              db='ase_assignment')
 
-    requestBody='{"items": ['
-
     try:
         with connection.cursor() as cursor:
-            # Read from database
-            sqlQuery = "SELECT item_name, price FROM Catalog"
+            sqlQuery = "INSERT INTO Orders VALUES ('order_id_1', 'user_id_1', 'Toothbrush,soap,wallet', 150, null)"
             cursor.execute(sqlQuery)
-            result = cursor.fetchall()
+            #result = cursor.fetchall()
 
-            for row in result:
-                 print(row)
-                 requestBody += '{"itemName":"'+row[0]+'","itemPrice":'+ str(row[1]) +'},'
     finally:
         connection.close()
-
-    requestBody = requestBody[:-1]
-    requestBody += ']}'
 
     return '{"status": "success"}'
 
