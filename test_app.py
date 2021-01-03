@@ -16,7 +16,7 @@ class TestHelloApp(unittest.TestCase):
 #      self.db_conn.execute("""CREATE TABLE `foo` (blah)""")
 
   def test_hello(self):
-    self.assertEqual(hello(), '{"items": [{"itemName":"ToothBrush","itemPrice":145.5},{"itemName":"soap","itemPrice":45.5},{"itemName":"Men Wallet","itemPrice":3345.5}]}')
+    self.assertEqual(hello(), '{"status": "success"}')
 
 if __name__ == '__main__':
   unittest.main()
