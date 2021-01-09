@@ -18,8 +18,9 @@ def hello():
         with connection.cursor() as cursor:
             sqlQuery = "INSERT INTO Orders VALUES ('"+ payload['user_id'][0:10] +"', '"+ payload['user_id'][0:10] +"', '"+ payload['items'] +"', "+ str(payload['total_price']) +", null);)"
             cursor.execute(sqlQuery)
-    finally:
+
         connection.commit()
+    finally:
         connection.close()
 
     return '{"status": "success"}'
