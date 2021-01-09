@@ -18,7 +18,7 @@ steps:
 - name: 'python:3.7-slim'
   id: Test
   entrypoint: /bin/sh
-  args: [ '-c', 'apt-get update && apt-get install -y mariadb-server && mkdir -p /run/mysqld && chown mysql:mysql -R /run/mysqld && service mysql start && mysql < data_for_test_db.sql && pip install flask && pip install pymysql && python test_app.py -v']
+  args: [ '-c', 'apt-get update && apt-get install -y mariadb-server && mkdir -p /run/mysqld && chown mysql:mysql -R /run/mysqld && service mysql start && mysql < data_for_test_db.sql && pip install flask && pip install pymysql && pip install requests && python test_app.py -v']
 
 # This step builds the container image.
 - name: 'gcr.io/cloud-builders/docker'
