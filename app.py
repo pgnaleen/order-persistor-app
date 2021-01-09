@@ -16,7 +16,7 @@ def hello():
 
     try:
         with connection.cursor() as cursor:
-            sqlQuery = "INSERT INTO Orders VALUES ('"+ payload['user_id'][0:10] +"', '"+ payload['user_id'][0:10] +"', '"+ payload['items'] +"', "+ str(payload['total_price']) +", null);)"
+            sqlQuery = "INSERT INTO Orders VALUES ('"+ payload['user_id'][0:10] +"', '"+ payload['user_id'][0:10] +"', '"+ payload['items'] +"', "+ str(payload['total_price']) +", null);"
             cursor.execute(sqlQuery)
 
         connection.commit()
