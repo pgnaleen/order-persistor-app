@@ -1,23 +1,25 @@
 # [START order-persistor-app]
 from flask import Flask
+from flask import request
 import pymysql
 
 app = Flask('order-persistor')
 
-@app.route('/', methods = ['PUT'])
+@app.route('/', methods = ['POST'])
 def hello():
+    payload = request.get_json()
     connection = pymysql.connect(host='127.0.0.1',
                              user='root',
                              password='root',
                              db='ase_assignment')
+    print(payload)
 
     try:
         with connection.cursor() as cursor:
-            sqlQuery = "INSERT INTO Orders VALUES ('order_id_1', 'user_id_1', 'Toothbrush,soap,wallet', 150, null)"
+            sqlQuery = "INSERT INTO Orders VALUES ('"+ payload['user_id'][0:10] +"', '"+ payload['user_id'][0:10] +"', '"+ payload['items'] +"', "+ str(payload['total_price']) +", null);)"
             cursor.execute(sqlQuery)
-            #result = cursor.fetchall()
-
     finally:
+        connection.commit()
         connection.close()
 
     return '{"status": "success"}'
